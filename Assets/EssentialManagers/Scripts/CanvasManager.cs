@@ -3,126 +3,202 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CanvasManager : MonoSingleton<CanvasManager>
+namespace EssentialManagers.Scripts
 {
-    public enum PanelType
+    public class CanvasManager : MonoSingleton<CanvasManager>
     {
-        MainMenu, Game, Success, Fail
-    }
+        #region Base Fields
 
-    [Header("Canvas Groups")]
-    public CanvasGroup mainMenuCanvasGroup;
-    public CanvasGroup gameCanvasGroup;
-    public CanvasGroup successCanvasGroup;
-    public CanvasGroup failCanvasGroup;
-
-    [Header("Standard Objects")]
-    public Image screenFader;
-    public TextMeshProUGUI levelText;
-
-    CanvasGroup[] canvasArray;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        canvasArray = new CanvasGroup[System.Enum.GetNames(typeof(PanelType)).Length];
-
-        canvasArray[(int)PanelType.MainMenu] = mainMenuCanvasGroup;
-        canvasArray[(int)PanelType.Game] = gameCanvasGroup;
-        canvasArray[(int)PanelType.Success] = successCanvasGroup;
-        canvasArray[(int)PanelType.Fail] = failCanvasGroup;
-
-        foreach (CanvasGroup canvas in canvasArray)
+        public enum PanelType
         {
-            canvas.gameObject.SetActive(true);
-            canvas.alpha = 0;
+            MainMenu,
+            Game,
+            Success,
+            Fail,
+            Online,
+            Host
         }
 
-        FadeInScreen(1f);
-        ShowPanel(PanelType.MainMenu);
+        [Header("Canvas Groups")] public CanvasGroup mainMenuCanvasGroup;
+        public CanvasGroup gameCanvasGroup;
+        public CanvasGroup successCanvasGroup;
+        public CanvasGroup failCanvasGroup;
+        public CanvasGroup onlineCanvasGroup;
+        public CanvasGroup hostCanvasGroup;
 
+        [Header("Standard Objects")] public Image screenFader;
+        public TextMeshProUGUI levelText;
 
-        // HACK: Workaround for FBSDK
-        // FBSDK spawns a persistent EventSystem object. Since Unity 2020.2 there must be only one EventSystem objects at a given time.
-        // So we must dispose our own EventSystem object if it exists.
-        UnityEngine.EventSystems.EventSystem[] eventSystems = FindObjectsOfType<UnityEngine.EventSystems.EventSystem>();
-        if (eventSystems.Length > 1)
+        CanvasGroup[] canvasArray;
+
+        #endregion
+
+        [Header("References")] [SerializeField]
+        Button localGameButton;
+
+        [SerializeField] Button onlineGameButton;
+        [SerializeField] Button onlineHostButton;
+        [SerializeField] Button onlineConnectButton;
+        [SerializeField] Button onlineBackButton;
+        [SerializeField] Button hostBackButton;
+
+        protected override void Awake()
         {
-            Destroy(GetComponentInChildren<UnityEngine.EventSystems.EventSystem>().gameObject);
-            Debug.LogWarning("There are multiple live EventSystem components. Destroying ours.");
-        }
-    }
+            base.Awake();
 
-    void Start()
-    {
-        levelText.text = "LEVEL " + GameManager.instance.GetTotalStagePlayed().ToString();
+            canvasArray = new CanvasGroup[System.Enum.GetNames(typeof(PanelType)).Length];
 
-        GameManager.instance.LevelStartedEvent += (() => ShowPanel(PanelType.Game));
-        GameManager.instance.LevelSuccessEvent += (() => ShowPanel(PanelType.Success));
-        GameManager.instance.LevelFailedEvent += (() => ShowPanel(PanelType.Fail));
-    }
+            canvasArray[(int)PanelType.MainMenu] = mainMenuCanvasGroup;
+            canvasArray[(int)PanelType.Game] = gameCanvasGroup;
+            canvasArray[(int)PanelType.Success] = successCanvasGroup;
+            canvasArray[(int)PanelType.Fail] = failCanvasGroup;
+            canvasArray[(int)PanelType.Online] = onlineCanvasGroup;
+            canvasArray[(int)PanelType.Host] = hostCanvasGroup;
 
-    public void ShowPanel(PanelType panelId)
-    {
-        int panelIndex = (int)panelId;
-
-        for (int i = 0; i < canvasArray.Length; i++)
-        {
-            if (i == panelIndex)
+            foreach (CanvasGroup canvas in canvasArray)
             {
-                FadePanelIn(canvasArray[i]);
+                canvas.gameObject.SetActive(true);
+                canvas.alpha = 0;
             }
 
-            else
+            FadeInScreen(1f);
+            ShowPanel(PanelType.MainMenu);
+
+
+            // HACK: Workaround for FBSDK
+            // FBSDK spawns a persistent EventSystem object. Since Unity 2020.2 there must be only one EventSystem objects at a given time.
+            // So we must dispose our own EventSystem object if it exists.
+            UnityEngine.EventSystems.EventSystem[] eventSystems =
+                FindObjectsOfType<UnityEngine.EventSystems.EventSystem>();
+            if (eventSystems.Length > 1)
             {
-                FadePanelOut(canvasArray[i]);
+                Destroy(GetComponentInChildren<UnityEngine.EventSystems.EventSystem>().gameObject);
+                Debug.LogWarning("There are multiple live EventSystem components. Destroying ours.");
             }
         }
-    }
 
-    #region ButtonEvents
-    public void OnTapRestart()
-    {
-        FadeOutScreen(GameManager.instance.RestartStage, 1);
-    }
+        void Start()
+        {
+            levelText.text = "LEVEL " + GameManager.instance.GetTotalStagePlayed().ToString();
 
-    public void OnTapContinue()
-    {
-        FadeOutScreen(GameManager.instance.NextStage, 1);
-    }
-    #endregion
-    #region FadeInOut
-    private void FadePanelOut(CanvasGroup panel)
-    {
-        panel.DOFade(0, 0.75f);
-        panel.blocksRaycasts = false;
-    }
+            GameManager.instance.LevelStartedEvent += (() => ShowPanel(PanelType.Game));
+            GameManager.instance.LevelSuccessEvent += (() => ShowPanel(PanelType.Success));
+            GameManager.instance.LevelFailedEvent += (() => ShowPanel(PanelType.Fail));
 
-    private void FadePanelIn(CanvasGroup panel)
-    {
-        panel.DOFade(1, 0.75f);
-        panel.blocksRaycasts = true;
-    }
+            localGameButton.onClick.AddListener(OnLocalGameButtonClicked);
+            onlineGameButton.onClick.AddListener(OnOnlineGameButtonClicked);
+            onlineHostButton.onClick.AddListener(OnlineHostButtonClicked);
+            onlineConnectButton.onClick.AddListener(OnlineConnectButtonClicked);
+            onlineBackButton.onClick.AddListener(OnlineBackButtonClicked);
+            hostBackButton.onClick.AddListener(OnHostBackButtonClicked);
+        }
 
-    public void FadeOutScreen(TweenCallback callback, float duration)
-    {
-        screenFader.DOFade(1, duration).From(0).OnComplete(callback);
-    }
+     
 
-    public void FadeOutScreen(float duration)
-    {
-        screenFader.DOFade(1, duration).From(0);
-    }
 
-    public void FadeInScreen(TweenCallback callback, float duration)
-    {
-        screenFader.DOFade(0, duration).From(1).OnComplete(callback);
-    }
+        public void ShowPanel(PanelType panelId)
+        {
+            int panelIndex = (int)panelId;
 
-    public void FadeInScreen(float duration)
-    {
-        screenFader.DOFade(0, duration).From(1);
+            for (int i = 0; i < canvasArray.Length; i++)
+            {
+                if (i == panelIndex)
+                {
+                    FadePanelIn(canvasArray[i]);
+                }
+
+                else
+                {
+                    FadePanelOut(canvasArray[i]);
+                }
+            }
+        }
+
+        #region Custom UI Region
+
+        private void OnLocalGameButtonClicked()
+        { 
+        }
+
+        private void OnOnlineGameButtonClicked()
+        { 
+            FadePanelOut(mainMenuCanvasGroup);
+            ShowPanel(PanelType.Online);
+        }
+
+        private void OnlineBackButtonClicked()
+        { 
+            FadePanelOut(onlineCanvasGroup);
+            FadePanelIn(mainMenuCanvasGroup);
+        }
+
+        private void OnlineConnectButtonClicked()
+        { 
+        }
+
+        private void OnlineHostButtonClicked()
+        { 
+            FadePanelOut(onlineCanvasGroup);
+            ShowPanel(PanelType.Host);
+        }
+        
+        private void OnHostBackButtonClicked()
+        { 
+            FadePanelOut(hostCanvasGroup);
+            FadePanelIn(onlineCanvasGroup);
+            
+        }
+
+        #endregion
+
+        #region ButtonEvents
+
+        public void OnTapRestart()
+        {
+            FadeOutScreen(GameManager.instance.RestartStage, 1);
+        }
+
+        public void OnTapContinue()
+        {
+            FadeOutScreen(GameManager.instance.NextStage, 1);
+        }
+
+        #endregion
+
+        #region FadeInOut
+
+        private void FadePanelOut(CanvasGroup panel)
+        {
+            panel.DOFade(0, 0.35f);
+            panel.blocksRaycasts = false;
+        }
+
+        private void FadePanelIn(CanvasGroup panel)
+        {
+            panel.DOFade(1, 0.35f);
+            panel.blocksRaycasts = true;
+        }
+
+        public void FadeOutScreen(TweenCallback callback, float duration)
+        {
+            screenFader.DOFade(1, duration).From(0).OnComplete(callback);
+        }
+
+        public void FadeOutScreen(float duration)
+        {
+            screenFader.DOFade(1, duration).From(0);
+        }
+
+        public void FadeInScreen(TweenCallback callback, float duration)
+        {
+            screenFader.DOFade(0, duration).From(1).OnComplete(callback);
+        }
+
+        public void FadeInScreen(float duration)
+        {
+            screenFader.DOFade(0, duration).From(1);
+        }
+
+        #endregion
     }
-    #endregion
 }
