@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 1325266756}
   - component: {fileID: 1325266757}
   m_Layer: 0
-  m_Name: Client
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1504229972303502200, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: orthographic size
-      value: 10
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 2109627262050742934, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -456,23 +456,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4875300527698177765, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -44.3
       objectReference: {fileID: 0}
     - target: {fileID: 4875300527698177765, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4875300527698177765, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 4875300527698177765, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.8647087
       objectReference: {fileID: 0}
     - target: {fileID: 4875300527698177765, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.50227374
       objectReference: {fileID: 0}
     - target: {fileID: 4964873482142841070, guid: 3ed0971d5888c614fbae05154be0586c, type: 3}
       propertyPath: m_AnchorMax.y

@@ -3531,6 +3531,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4267915362721308750}
   - component: {fileID: 5801378687745055327}
+  - component: {fileID: 2397365616064206221}
+  - component: {fileID: 1899158162377646742}
   m_Layer: 0
   m_Name: CanvasManager
   m_TagString: Untagged
@@ -3575,12 +3577,39 @@ MonoBehaviour:
   hostCanvasGroup: {fileID: 7014581376761387256}
   screenFader: {fileID: 7533348499011124763}
   levelText: {fileID: 3719354001359010214}
+  Server: {fileID: 2397365616064206221}
+  Client: {fileID: 1899158162377646742}
+  adressInputField: {fileID: 7782673979604696684}
   localGameButton: {fileID: 2490072377982694945}
   onlineGameButton: {fileID: 7255476997763339542}
   onlineHostButton: {fileID: 4912370258511530415}
   onlineConnectButton: {fileID: 650758642492147658}
   onlineBackButton: {fileID: 4708310292041381442}
   hostBackButton: {fileID: 1865680281907638520}
+--- !u!114 &2397365616064206221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383676295553080113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5b8eafa9a151f49a72a2fb7bc84441, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1899158162377646742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383676295553080113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85578d526f8050c4b8b6973226ceeb9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7446407049086513434
 GameObject:
   m_ObjectHideFlags: 0

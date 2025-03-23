@@ -7,7 +7,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 {
     public class GridManager : MonoSingleton<GridManager>
     {
-        [Header("Config")] [SerializeField] private bool autoGenerate = true;
+        [Header("Config")]  
         public int gridWidth = 10; // Width of the grid
         public int gridHeight = 10; // Height of the grid
         public float cellSpacing = 1f; // Spacing between cells

@@ -3,9 +3,9 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-namespace Data
+namespace Controllers
 {
-    public class Client : MonoBehaviourPunCallbacks
+    public class Player : MonoBehaviourPunCallbacks
     {
         // Start is called before the first frame update
         void Awake()

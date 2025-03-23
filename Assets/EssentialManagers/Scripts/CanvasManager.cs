@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Net;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,15 +34,15 @@ namespace EssentialManagers.Scripts
 
         #endregion
 
-        [Header("References")] [SerializeField]
-        Button localGameButton;
-
+        [Header("References")] public Server Server;
+        public Client Client;
+        [SerializeField] private TMP_InputField adressInputField;
+        [SerializeField] Button localGameButton;
         [SerializeField] Button onlineGameButton;
         [SerializeField] Button onlineHostButton;
         [SerializeField] Button onlineConnectButton;
         [SerializeField] Button onlineBackButton;
         [SerializeField] Button hostBackButton;
-
         protected override void Awake()
         {
             base.Awake();
@@ -93,9 +94,6 @@ namespace EssentialManagers.Scripts
             hostBackButton.onClick.AddListener(OnHostBackButtonClicked);
         }
 
-     
-
-
         public void ShowPanel(PanelType panelId)
         {
             int panelIndex = (int)panelId;
@@ -117,36 +115,42 @@ namespace EssentialManagers.Scripts
         #region Custom UI Region
 
         private void OnLocalGameButtonClicked()
-        { 
+        {
+            Server.Initialize(8007);
+            Client.Initialize("127.0.0.1", 8007);
         }
 
         private void OnOnlineGameButtonClicked()
-        { 
+        {
             FadePanelOut(mainMenuCanvasGroup);
             ShowPanel(PanelType.Online);
         }
 
         private void OnlineBackButtonClicked()
-        { 
+        {
             FadePanelOut(onlineCanvasGroup);
             FadePanelIn(mainMenuCanvasGroup);
         }
 
         private void OnlineConnectButtonClicked()
-        { 
+        {
+            Client.Initialize(adressInputField.text, 8007);
         }
 
         private void OnlineHostButtonClicked()
-        { 
+        {
+            Server.Initialize(8007);
+            Client.Initialize("127.0.0.1", 8007);
             FadePanelOut(onlineCanvasGroup);
             ShowPanel(PanelType.Host);
         }
-        
+
         private void OnHostBackButtonClicked()
-        { 
+        {
+            Server.Shutdown();
+            Client.Shutdown();
             FadePanelOut(hostCanvasGroup);
             FadePanelIn(onlineCanvasGroup);
-            
         }
 
         #endregion
