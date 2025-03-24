@@ -9,18 +9,18 @@ namespace Controllers
     {
         [Header("Debug")] public CellController CurrentCell;
           public Team team;
-        public PieceAttributes PieceAttributes;
+        [FormerlySerializedAs("PieceAttributes")] public PieceData pieceData;
         MeshRenderer _meshRenderer;
-        public void Initialize( CellController cell, PieceAttributes pieceAttributes)
+        public void Initialize( CellController cell, PieceData pieceData)
         {
             CurrentCell = cell;
             team = cell.GetCoordinates().y < 2 ? Team.White : Team.Black;
-            PieceAttributes = pieceAttributes;
+            this.pieceData = pieceData;
             
             // setMaterial by team
             _meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
             _meshRenderer.material = team == Team.Black ? 
-                pieceAttributes.blackMaterial : pieceAttributes.whiteMaterial;
+                pieceData.blackMaterial : pieceData.whiteMaterial;
 
         }
     }

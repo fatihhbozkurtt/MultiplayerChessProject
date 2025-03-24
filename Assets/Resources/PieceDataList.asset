@@ -14,26 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pieceDataList:
   - PieceType: 0
-    Team: 0
+    PiecePrefab: {fileID: 3615979518748541681, guid: 970352b7cadea4e42b243e283446aafb, type: 3}
     blackMaterial: {fileID: 2100000, guid: 039463fa509ddec4f8f62464f3decc3e, type: 2}
     whiteMaterial: {fileID: 2100000, guid: b5a19b2be2f034c4a892e205b62b52c8, type: 2}
   - PieceType: 1
-    Team: 0
+    PiecePrefab: {fileID: 4032840897997293257, guid: 3e03d677dddc864429f96401734e10e9, type: 3}
     blackMaterial: {fileID: 2100000, guid: c5ac722ef5a533941a87f79b7d4a197a, type: 2}
     whiteMaterial: {fileID: 2100000, guid: 3e8d44cfbd3c32a48b671135be64d6ac, type: 2}
   - PieceType: 2
-    Team: 0
+    PiecePrefab: {fileID: 3717311710259176010, guid: 8253ecc9b42d6774a8393608d6de05fd, type: 3}
     blackMaterial: {fileID: 2100000, guid: bae910897e7359a4c8e219248d19fc3c, type: 2}
     whiteMaterial: {fileID: 2100000, guid: 0d997373e4b0f7349a0bcfd9f75af5c4, type: 2}
   - PieceType: 3
-    Team: 0
+    PiecePrefab: {fileID: 9121204590914314207, guid: ffa2b0ef2ffe27842a76b2edf6afb43f, type: 3}
     blackMaterial: {fileID: 2100000, guid: 519bb7ad9c0b01145b66756f3c261e30, type: 2}
     whiteMaterial: {fileID: 2100000, guid: 00912c1e55787984d8a57cef15d87a8b, type: 2}
   - PieceType: 4
-    Team: 0
+    PiecePrefab: {fileID: 7484905297362240767, guid: 2356754c9ffbfce4095584202e9aeb42, type: 3}
     blackMaterial: {fileID: 2100000, guid: 7d884c4fe6f7eec41a8c4c06eb3784e2, type: 2}
     whiteMaterial: {fileID: 2100000, guid: 1ed4f381fcff50d47acee09c5d1fdef2, type: 2}
   - PieceType: 5
-    Team: 0
+    PiecePrefab: {fileID: 5140954692067623619, guid: 7e788785ffb83c546ad3e6fb104c88bc, type: 3}
     blackMaterial: {fileID: 2100000, guid: 5a3ab2601b4968341a959d89a206c835, type: 2}
     whiteMaterial: {fileID: 2100000, guid: adefce1589f7e584ebd7c6d597a46ee9, type: 2}

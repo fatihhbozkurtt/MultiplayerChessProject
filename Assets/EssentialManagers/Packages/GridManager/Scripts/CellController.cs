@@ -21,7 +21,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
         public List<CellController> neighbours;
 
-        [SerializeField] private PieceAttributes pieceAttribute;
+        [SerializeField] private PieceData pieceData;
 
         private void Start()
         {
@@ -30,12 +30,11 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        public void Initialize(Vector2Int initCoords, bool usePhoton = true)
+        public void Initialize(Vector2Int initCoords)
         {
             meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
             coordinates = initCoords;
-
-            if (usePhoton) HandlePieceSpawning();
+            HandlePieceSpawning();
         }
 
         // Helper method to instantiate and assign piece
@@ -48,7 +47,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             // Spawn Pawns
             if (coordinates.y == 1 || coordinates.y == 6)
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.Pawn);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.Pawn);
                 canSpawnPiece = true;
             }
 
@@ -56,7 +55,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             if (coordinates == Vector2Int.zero || coordinates == new Vector2Int(7, 0) ||
                 coordinates == new Vector2Int(0, 7) || coordinates == new Vector2Int(7, 7))
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.Rook);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.Rook);
                 canSpawnPiece = true;
             }
 
@@ -64,7 +63,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             if (coordinates == new Vector2Int(1, 0) || coordinates == new Vector2Int(6, 0) ||
                 coordinates == new Vector2Int(1, 7) || coordinates == new Vector2Int(6, 7))
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.Knight);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.Knight);
                 canSpawnPiece = true;
             }
 
@@ -72,21 +71,21 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             if (coordinates == new Vector2Int(2, 0) || coordinates == new Vector2Int(5, 0) ||
                 coordinates == new Vector2Int(2, 7) || coordinates == new Vector2Int(5, 7))
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.Bishop);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.Bishop);
                 canSpawnPiece = true;
             }
 
             // Spawn Queens
             if (coordinates == new Vector2Int(3, 0) || coordinates == new Vector2Int(3, 7))
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.Queen);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.Queen);
                 canSpawnPiece = true;
             }
 
             // Spawn Kings
             if (coordinates == new Vector2Int(4, 0) || coordinates == new Vector2Int(4, 7))
             {
-                pieceAttribute = DataExtensions.GetPieceDataByType(PieceType.King);
+                pieceData = DataExtensions.GetPieceDataByType(PieceType.King);
                 canSpawnPiece = true;
             }
 
@@ -94,10 +93,14 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
             #endregion
 
-            GameObject clone = PhotonNetwork.Instantiate(pieceAttribute.PieceType.ToString(), transform.position,
+            // GameObject clone = PhotonNetwork.Instantiate(pieceData.PieceType.ToString(), transform.position,
+            //     Quaternion.identity);
+            // currentPiece = clone.GetComponent<PieceController>();
+
+            GameObject pieceClone = Instantiate(pieceData.PiecePrefab, transform.position,
                 Quaternion.identity);
-            currentPiece = clone.GetComponent<PieceController>();
-            currentPiece.Initialize(this, pieceAttribute);
+            currentPiece = pieceClone.GetComponent<PieceController>();
+            currentPiece.Initialize(this, pieceData);
             SetOccupied(currentPiece);
         }
 
@@ -106,9 +109,10 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         {
             if (!GameManager.instance.isLevelActive) return;
             if (!isOccupied) return;
+            if (currentPiece == null) return;
 
-            if (currentPiece != null)
-                currentPiece.gameObject.SetActive(false);
+            if (GridManager.instance.GetCurrentTeam() != currentPiece.team) return;
+            currentPiece.gameObject.SetActive(false);
         }
 
         #region GETTERS & SETTERS

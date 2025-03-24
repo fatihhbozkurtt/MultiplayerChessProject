@@ -21,7 +21,7 @@ namespace Data
             }
         }
 
-        public static PieceAttributes GetPieceDataByType(PieceType type)
+        public static PieceData GetPieceDataByType(PieceType type)
         {
             LoadPieceData();
 
@@ -30,11 +30,11 @@ namespace Data
                 return null;
             }
 
-            PieceAttributes pieceAttributes = _pieceData.pieceDataList.FirstOrDefault(p => p.PieceType == type);
+            PieceData pieceData = _pieceData.pieceDataList.FirstOrDefault(p => p.PieceType == type);
 
-            if (pieceAttributes != null)
+            if (pieceData != null)
             {
-                return pieceAttributes;
+                return pieceData;
             }
 
             Debug.LogError($"Defined {type} could not be found!");

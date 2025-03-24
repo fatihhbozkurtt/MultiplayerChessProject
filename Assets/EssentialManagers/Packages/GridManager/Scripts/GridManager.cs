@@ -14,31 +14,18 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         [Header("Config")] public int gridWidth = 10; // Width of the grid
         public int gridHeight = 10; // Height of the grid
         public float cellSpacing = 1f; // Spacing between cells
+
         [Header("References")] public GameObject cellPrefab; // Prefab for the cell
+
         [Header("Debug")] public List<CellController> gridPlan;
-        [Header("Multiplayer Logic")] private int playerCount;
-        private Team currentTeamEnum;
+
+        [Header("Multiplayer Logic")] private int _playerCount;
+        private Team _currentTeamEnum;
 
 
         protected void Start()
         {
-            // if (autoGenerate)
-            //     CreateGrid();
-            // else
-            // {
-            //     gridPlan = new List<CellController>();
-            //     List<CellController> tempList = transform.GetComponentsInChildren<CellController>().ToList();
-            //
-            //     foreach (var cell in tempList)
-            //     {
-            //         if (cell == null) continue;
-            //         if (!cell.gameObject.activeInHierarchy) continue;
-            //
-            //         gridPlan.Add(cell);
-            //     }
-            // }
-            
-            
+            CreateGrid();
         }
 
         protected override void Awake()
@@ -47,8 +34,8 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
             RegisterEvents();
         }
-
-        public void CreateGridWithPhoton()
+        
+        private void CreateGrid()
         {
             for (var x = 0; x < gridWidth; x++)
             {
@@ -56,35 +43,11 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 {
                     Vector2Int coordinates = new Vector2Int(x, y);
 
-                    GameObject cell = PhotonNetwork.Instantiate("Cell",
+                    GameObject cell = Instantiate(cellPrefab,
                         new Vector3(x * cellSpacing, 0, y * cellSpacing), Quaternion.identity);
 
                     CellController cellController = cell.GetComponent<CellController>();
                     cellController.Initialize(coordinates);
-                    cell.transform.parent = transform;
-                    gridPlan.Add(cellController);
-
-                    // Assign color based on (x + y) % 2
-                    bool isBlack = (x + y) % 2 == 0;
-                    Color tileColor = isBlack ? Color.black : Color.white;
-                    cellController.SetMaterialColor(tileColor);
-                }
-            }
-        }
-        
-        public void CreateGrid()
-        {
-            for (var x = 0; x < gridWidth; x++)
-            {
-                for (var y = 0; y < gridHeight; y++)
-                {
-                    Vector2Int coordinates = new Vector2Int(x, y);
-
-                    GameObject cell =  Instantiate(cellPrefab,
-                        new Vector3(x * cellSpacing, 0, y * cellSpacing), Quaternion.identity);
-
-                    CellController cellController = cell.GetComponent<CellController>();
-                    cellController.Initialize(coordinates, false);
                     cell.transform.parent = transform;
                     gridPlan.Add(cellController);
 
@@ -118,19 +81,19 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             NetWelcome nw = msg as NetWelcome;
 
             // Assign team
-            nw.AssignedIntTeam = ++playerCount;
+            nw.AssignedIntTeam = ++_playerCount;
 
             // Get all enum values
             Team[] teamValues = (Team[])System.Enum.GetValues(typeof(Team));
             nw.Team = teamValues[nw.AssignedIntTeam]; // Assign the team at the specified index
 
-            Debug.Log($" 1) My assigned team: {nw.Team}, int value: {playerCount}");
+            Debug.Log($" 1) My assigned team: {nw.Team}, int value: {_playerCount}");
 
             // Return back to the client
             Server.instance.SendToClient(cnn, nw);
 
 
-            if (playerCount == 2)
+            if (_playerCount == 2)
             {
                 Server.instance.Broadcast(new NetStartGame());
             }
@@ -148,7 +111,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             if (nw != null)
             {
                 _tempIntTeam = nw.AssignedIntTeam;
-                currentTeamEnum = nw.Team;
+                _currentTeamEnum = nw.Team;
 
                 Debug.Log($" 2) My assigned team: {nw.Team}, int value: {nw.AssignedIntTeam}");
             }
@@ -162,19 +125,18 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         {
             GameManager.instance.StartGame();
 
-            CameraManager.instance.SetCam(currentTeamEnum == Team.White
+            CameraManager.instance.SetCam(_currentTeamEnum == Team.White
                 ? CameraManager.CamType.WhitePlayer
                 : CameraManager.CamType.BlackPlayer);
-
-            // CreateGridWithPhoton();
-            CreateGrid();
+ 
         }
-        
 
         #endregion
 
         #region Helper Methods
 
+        public Team GetCurrentTeam() => _currentTeamEnum;
+        
         public CellController GetClosestGridCell(Vector3 from)
         {
             if (gridPlan == null || gridPlan.Count == 0)
