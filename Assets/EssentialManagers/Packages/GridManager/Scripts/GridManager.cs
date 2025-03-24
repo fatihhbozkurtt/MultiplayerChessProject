@@ -38,7 +38,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             //     }
             // }
             
-            CreateGrid();
+            
         }
 
         protected override void Awake()
@@ -161,8 +161,15 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         private void OnStartGameClient(NetMessage msg)
         {
             GameManager.instance.StartGame();
+
+            CameraManager.instance.SetCam(currentTeamEnum == Team.White
+                ? CameraManager.CamType.WhitePlayer
+                : CameraManager.CamType.BlackPlayer);
+
+            // CreateGridWithPhoton();
             CreateGrid();
         }
+        
 
         #endregion
 

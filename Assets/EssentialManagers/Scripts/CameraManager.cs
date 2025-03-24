@@ -37,7 +37,7 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     private void Start()
     {
-        GameManager.instance.LevelStartedEvent += (() => { SetCam(CamType.Game); });
+      //  GameManager.instance.LevelStartedEvent += (() => { SetCam(CamType.Game); });
         GameManager.instance.LevelFailedEvent += (() => { SetCam(CamType.Fail); });
         GameManager.instance.LevelSuccessEvent += (() =>
         {
