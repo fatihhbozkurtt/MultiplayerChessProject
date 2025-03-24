@@ -40,5 +40,17 @@ namespace Data
             Debug.LogError($"Defined {type} could not be found!");
             return null;
         }
+
+        public static Team GetEnumByString(string teamString)
+        {
+            if (System.Enum.TryParse(teamString, true, out Team result))
+            {
+                return result;
+            }
+    
+            Debug.LogError($"Invalid team string: {teamString}");
+            return default; // Default to Team.Black if parsing fails
+        }
+
     }
 }

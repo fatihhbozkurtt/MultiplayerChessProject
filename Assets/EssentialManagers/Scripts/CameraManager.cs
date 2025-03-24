@@ -7,7 +7,7 @@ public class CameraManager : MonoSingleton<CameraManager>
 {
     public enum CamType
     {
-        Menu, Game, Win, Fail
+        Menu, Game, Win, Fail, WhitePlayer, BlackPlayer
     }
 
     public Camera mainCam;
@@ -15,6 +15,8 @@ public class CameraManager : MonoSingleton<CameraManager>
     public CinemachineVirtualCamera gameCam;
     public CinemachineVirtualCamera winCam;
     public CinemachineVirtualCamera failCam;
+    public CinemachineVirtualCamera whitePlayerCam;
+    public CinemachineVirtualCamera blackPlayerCam;
     public ParticleSystem confetti;
 
     CinemachineVirtualCamera[] vcamArr;
@@ -29,6 +31,8 @@ public class CameraManager : MonoSingleton<CameraManager>
         vcamArr[(int)CamType.Game] = gameCam;
         vcamArr[(int)CamType.Win] = winCam;
         vcamArr[(int)CamType.Fail] = failCam;
+        vcamArr[(int)CamType.WhitePlayer] = whitePlayerCam;
+        vcamArr[(int)CamType.BlackPlayer] = blackPlayerCam;
     }
 
     private void Start()

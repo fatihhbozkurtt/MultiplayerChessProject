@@ -2,7 +2,8 @@
 {
     public enum Team
     {
-        White,
-        Black,
+        None = 0,
+        White = 1,
+        Black = 2,
     }
 }

@@ -35,7 +35,7 @@ namespace Controllers
             Debug.Log("Joined Room successfully");
             base.OnJoinedRoom();
             
-            GridManager.instance.CreateGrid();
+            GridManager.instance.CreateGridWithPhoton();
         }
     }
 }

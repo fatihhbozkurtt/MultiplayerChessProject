@@ -30,12 +30,12 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        public void Initialize(Vector2Int initCoords)
+        public void Initialize(Vector2Int initCoords, bool usePhoton = true)
         {
             meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
             coordinates = initCoords;
 
-            HandlePieceSpawning();
+            if (usePhoton) HandlePieceSpawning();
         }
 
         // Helper method to instantiate and assign piece

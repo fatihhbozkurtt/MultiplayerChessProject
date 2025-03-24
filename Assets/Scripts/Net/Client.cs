@@ -1,4 +1,5 @@
 using System;
+using Net.NetMessage;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using Unity.VisualScripting;
@@ -89,7 +90,7 @@ namespace Net
             {
                 if (cmd == NetworkEvent.Type.Connect)
                 {
-                    //SendToServer(new NetWelcome());
+                    SendToServer(new NetWelcome());
                     Debug.Log("We're connected to the server.");
                 }
                 else if (cmd == NetworkEvent.Type.Data)
