@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1082024533394974495}
   - component: {fileID: 578925041571923387}
   - component: {fileID: 2426951327474328426}
+  - component: {fileID: 1660570200209226098}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -73,6 +74,25 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &1660570200209226098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717311710259176010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e0499bc71684aa0943e9b04788d5011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentCell: {fileID: 0}
+  Team: 0
+  pieceData:
+    PieceType: 0
+    PiecePrefab: {fileID: 0}
+    blackMaterial: {fileID: 0}
+    whiteMaterial: {fileID: 0}
 --- !u!1001 &7211583907487739180
 PrefabInstance:
   m_ObjectHideFlags: 0

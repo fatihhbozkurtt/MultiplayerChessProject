@@ -7,19 +7,20 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 {
     public class CellController : MonoBehaviour
     {
+        [Header("References")] [SerializeField]
+        GameObject initialMesh;
+
+        [SerializeField] GameObject highlightMesh;
+
         [Header("Debug")] public bool isPickable;
         public bool isOccupied;
         [SerializeField] private PieceController currentPiece;
-        public PieceController PreviousPiece; 
+        public PieceController PreviousPiece;
 
         [SerializeField] Vector2Int coordinates;
         [SerializeField] MeshRenderer meshRenderer;
-
         public List<CellController> neighbours;
-
         [SerializeField] private PieceData pieceData;
-
-     
 
         private void Start()
         {
@@ -106,15 +107,26 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         private void OnMouseDown()
         {
             if (!GameManager.instance.isLevelActive) return;
-            if (!isOccupied) return;
-            if (currentPiece == null) return;
-
+            if (currentPiece == null)
+            {
+                GridManager.instance.AssignNewSelectedCell(this);
+                return;
+            }
             if (GridManager.instance.GetCurrentTeam() != currentPiece.Team) return;
 
-            int sign = currentPiece.Team == Team.Black ? -1 : 1;
-            currentPiece.Move(
-                GridManager.instance.GetGridCellByCoordinates(new Vector2Int(coordinates.x,
-                    coordinates.y + (2 * sign))));
+            GridManager.instance.AssignNewSelectedCell(this);
+        }
+
+        public void GetHighlighted()
+        {
+            highlightMesh.SetActive(true);
+            initialMesh.SetActive(false);
+        }
+
+        public void RemoveHighlight()
+        {
+            highlightMesh.SetActive(false);
+            initialMesh.SetActive(true);
         }
 
         #region GETTERS & SETTERS

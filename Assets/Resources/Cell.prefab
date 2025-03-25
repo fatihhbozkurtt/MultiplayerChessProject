@@ -69,6 +69,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff53b177be59b9f49b0342164370aa8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialMesh: {fileID: 8522211955962700096}
+  highlightMesh: {fileID: 2910926475828594626}
   isPickable: 0
   isOccupied: 0
   currentPiece: {fileID: 0}
@@ -79,7 +81,6 @@ MonoBehaviour:
   pieceData:
     PieceType: 0
     PiecePrefab: {fileID: 0}
-    Team: 0
     blackMaterial: {fileID: 0}
     whiteMaterial: {fileID: 0}
 --- !u!114 &5106497704584970476
@@ -116,7 +117,7 @@ GameObject:
   - component: {fileID: 6777907433959182322}
   - component: {fileID: 8233764002296784938}
   m_Layer: 0
-  m_Name: Transparent
+  m_Name: Highlighted
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

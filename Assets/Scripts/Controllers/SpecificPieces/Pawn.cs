@@ -2,13 +2,13 @@
 using EssentialManagers.Packages.GridManager.Scripts;
 using UnityEngine;
 
-namespace Controllers
+namespace Controllers.SpecificPieces
 {
     public class Pawn : PieceController
     {
         private bool _hasMoved;
 
-        public override List<CellController> GetValidMoves()
+        protected override List<CellController> GetValidMoves()
         {
             List<CellController> validMoves = new List<CellController>();
             Vector2Int currentPos = CurrentCell.GetCoordinates();
@@ -29,12 +29,7 @@ namespace Controllers
             return validMoves;
         }
 
-        public override bool CanMove(CellController cell)
-        {
-             return GetValidMoves().Contains(cell);
-        }
-
-        private bool TryAddMove(List<CellController> moves, Vector2Int targetCoord, bool isCapture)
+        protected override bool TryAddMove(List<CellController> moves, Vector2Int targetCoord, bool isCapture)
         {
             CellController targetCell = GridManager.instance.GetGridCellByCoordinates(targetCoord);
             if (targetCell == null) return false;
@@ -54,18 +49,9 @@ namespace Controllers
             return false;
         }
 
-        public void MoveTo(CellController newCell)
+        protected override void MoveComplete()
         {
-            // if (newCell == null) return;
-            //
-            // // Update old and new cell references
-            // CurrentCell.pieceOnCell = null;
-            // newCell.pieceOnCell = this;
-            // transform.position = newCell.transform.position;
-            // CurrentCell = newCell;
-
-            // Mark as moved after first move
-            _hasMoved = true;
+             _hasMoved = true;
         }
     }
 }

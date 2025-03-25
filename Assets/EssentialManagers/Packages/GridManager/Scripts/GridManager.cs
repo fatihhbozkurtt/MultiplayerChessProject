@@ -18,7 +18,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
         [Header("Debug")] public List<CellController> gridPlan;
         public CellController SelectedCell;
-        
+
         [Header("Multiplayer Logic")] private int _playerCount;
         private Team _currentTeamEnum;
 
@@ -33,7 +33,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
             RegisterEvents();
         }
-        
+
         private void CreateGrid()
         {
             for (var x = 0; x < gridWidth; x++)
@@ -60,10 +60,25 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
         public void AssignNewSelectedCell(CellController newCell)
         {
-            if (SelectedCell != null)
+            if (SelectedCell != null) // already a cell selected before
             {
-                // already a cell selected before
-                SelectedCell.GetCurrentPiece().Move(newCell);
+                SelectedCell.GetCurrentPiece().TryMoveSelf(newCell);
+
+                // remove all cells' highlight
+                foreach (var cell in gridPlan)
+                {
+                    cell.RemoveHighlight();
+                }
+                
+                SelectedCell = null;
+            }
+            else if (newCell.GetCurrentPiece() != null)
+            {
+                // first time selecting a cell
+                SelectedCell = newCell;
+
+                // highlight the possible valid cells
+                SelectedCell.GetCurrentPiece().HihglightValidCells();
             }
         }
 
@@ -73,8 +88,8 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         {
             NetUtility.S_WELCOME += OnWelcomeServer;
             NetUtility.S_MAKE_MOVE += OnMakeMoveServer;
-            
-            
+
+
             NetUtility.C_WELCOME += OnWelcomeClient;
             NetUtility.C_START_GAME += OnStartGameClient;
             NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
@@ -84,7 +99,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         {
             NetUtility.S_WELCOME -= OnWelcomeServer;
             NetUtility.S_MAKE_MOVE -= OnMakeMoveServer;
-            
+
             NetUtility.C_WELCOME -= OnWelcomeClient;
             NetUtility.C_START_GAME -= OnStartGameClient;
             NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
@@ -114,17 +129,18 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 Server.instance.Broadcast(new NetStartGame());
             }
         }
-        
+
         private void OnMakeMoveServer(NetMessage msg, NetworkConnection conn)
         {
             // Receive and just broadcast it back
             NetMakeMove mm = msg as NetMakeMove;
-            
+
             Server.instance.Broadcast(mm);
         }
 
         // Client
         int _tempIntTeam;
+
         private void OnWelcomeClient(NetMessage msg)
         {
             // Receive the connection message
@@ -143,6 +159,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 Debug.Log(" 3) My assigned team null");
             }
         }
+
         private void OnStartGameClient(NetMessage msg)
         {
             GameManager.instance.StartGame();
@@ -150,32 +167,32 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             CameraManager.instance.SetCam(_currentTeamEnum == Team.White
                 ? CameraManager.CamType.WhitePlayer
                 : CameraManager.CamType.BlackPlayer);
- 
         }
+
         private void OnMakeMoveClient(NetMessage msg)
         {
             NetMakeMove mm = msg as NetMakeMove;
-            
-            if(mm.MoveData.TeamEnum == _currentTeamEnum) return;
-            
+
+            if (mm.MoveData.TeamEnum == _currentTeamEnum) return;
+
             Debug.LogWarning($"MM : {mm.MoveData.TeamEnum} : " +
                              $"{mm.MoveData.OriginalCoord.x}, {mm.MoveData.OriginalCoord.y} -> " +
                              $"{mm.MoveData.TargetCoord.x}, {mm.MoveData.TargetCoord.y} ");
-            
-            
+
+
             CellController originCell = GetGridCellByCoordinates(mm.MoveData.OriginalCoord);
             CellController targetCell = GetGridCellByCoordinates(mm.MoveData.TargetCoord);
 
             PieceController piece = originCell.GetCurrentPiece();
             piece.MakeMove(targetCell);
         }
-        
+
         #endregion
 
         #region Helper Methods
 
         public Team GetCurrentTeam() => _currentTeamEnum;
-        
+
         public CellController GetClosestGridCell(Vector3 from)
         {
             if (gridPlan == null || gridPlan.Count == 0)

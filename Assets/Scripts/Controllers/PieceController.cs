@@ -26,7 +26,7 @@ namespace Controllers
             _meshRenderer.material = Team == Team.Black ? pieceData.blackMaterial : pieceData.whiteMaterial;
         }
 
-        public void Move(CellController targetCell)
+        public void TryMoveSelf(CellController targetCell)
         {
             if (!CanMove(targetCell)) return;
 
@@ -41,10 +41,11 @@ namespace Controllers
             CurrentCell.SetFree();
             CurrentCell = targetCell;
             targetCell.SetOccupied(this);
-            transform.DOMove(targetCell.transform.position, 0.5f);
+            transform.DOMove(targetCell.transform.position, 0.5f).OnComplete(MoveComplete);
 
             Client.instance.SendToServer(nm);
         }
+
 
         public void MakeMove(CellController targetCell)
         {
@@ -54,16 +55,29 @@ namespace Controllers
             transform.DOMove(targetCell.transform.position, 0.5f);
         }
 
-        public virtual List<CellController> GetValidMoves()
+        public void HihglightValidCells()
         {
-            return new List<CellController>(); // Override in subclasses
+            for (int i = 0; i < GetValidMoves().Count; i++)
+            {
+                var validMoveCell = GetValidMoves()[i];
+                validMoveCell.GetHighlighted();
+            }
         }
-
-        public abstract bool CanMove(CellController cell);
-
+        
+        
+        // Helpers
+        
         public int GetDirectionSign()
         {
             return Team == Team.Black ? -1 : 1;
         }
+
+        private bool CanMove(CellController cell)
+        {
+            return GetValidMoves().Contains(cell);
+        }
+        protected abstract List<CellController> GetValidMoves();
+        protected abstract bool TryAddMove(List<CellController> moves, Vector2Int targetCoord, bool isCapture);
+        protected abstract void MoveComplete();
     }
 }
