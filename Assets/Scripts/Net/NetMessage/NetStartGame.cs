@@ -7,12 +7,12 @@ namespace Net.NetMessage
     {
         public NetStartGame()
         {
-            Code = OpCode.START_GAME;
+            Code = OperationCode.START_GAME;
         }
         
         public NetStartGame(DataStreamReader reader) // <-- Receiving the box
         {
-            Code = OpCode.START_GAME;
+            Code = OperationCode.START_GAME;
             Deserialize(ref reader);
         }
 

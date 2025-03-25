@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Controllers;
 using Data;
+using Net.NetMessage;
 using UnityEngine;
 
 namespace EssentialManagers.Packages.GridManager.Scripts
@@ -107,14 +108,14 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         private void OnMouseDown()
         {
             if (!GameManager.instance.isLevelActive) return;
-            if (currentPiece == null)
-            {
-                GridManager.instance.AssignNewSelectedCell(this);
-                return;
-            }
-            if (GridManager.instance.GetCurrentTeam() != currentPiece.Team) return;
-
             GridManager.instance.AssignNewSelectedCell(this);
+            // if (currentPiece == null)
+            //     return;
+            //
+            //
+            // if (GridManager.instance.GetCurrentTeam() != currentPiece.Team)
+            //     return;
+              
         }
 
         public void GetHighlighted()
@@ -136,12 +137,18 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             meshRenderer.material.color = color;
         }
 
-        public void SetOccupied(PieceController pc)
+        public void SetOccupied(PieceController pc, bool checkForCapturing = false)
         {
+            if (checkForCapturing && currentPiece != null) TriggerCapturing();
             currentPiece = pc;
             isOccupied = true;
         }
 
+        private void TriggerCapturing()
+        {
+            currentPiece.GetCaptured();
+        }
+        
         public void SetFree()
         {
             PreviousPiece = currentPiece;

@@ -11,12 +11,12 @@ namespace Net.NetMessage
 
         public NetWelcome() // <-- Making the box
         {
-            Code = OpCode.WELCOME;
+            Code = OperationCode.WELCOME;
         }
 
         public NetWelcome(DataStreamReader reader) // <-- Receiving the box
         {
-            Code = OpCode.WELCOME;
+            Code = OperationCode.WELCOME;
             Deserialize(ref reader);
         }
 

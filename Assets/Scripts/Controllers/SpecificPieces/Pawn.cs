@@ -49,7 +49,7 @@ namespace Controllers.SpecificPieces
             return false;
         }
 
-        protected override void MoveComplete()
+        protected override void OnMoveComplete()
         {
              _hasMoved = true;
         }

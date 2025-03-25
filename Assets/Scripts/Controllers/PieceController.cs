@@ -40,14 +40,15 @@ namespace Controllers
 
             CurrentCell.SetFree();
             CurrentCell = targetCell;
-            targetCell.SetOccupied(this);
-            transform.DOMove(targetCell.transform.position, 0.5f).OnComplete(MoveComplete);
+            targetCell.SetOccupied(this, true);
+            transform.DOMove(targetCell.transform.position, 0.5f).OnComplete(OnMoveComplete);
 
             Client.instance.SendToServer(nm);
         }
 
-
-        public void MakeMove(CellController targetCell)
+        #region Orders coming from the Server
+        
+        public void OrderedMakeMove(CellController targetCell)
         {
             CurrentCell.SetFree();
             CurrentCell = targetCell;
@@ -55,7 +56,15 @@ namespace Controllers
             transform.DOMove(targetCell.transform.position, 0.5f);
         }
 
-        public void HihglightValidCells()
+        public void OrderedGetCaptured()
+        {
+            CurrentCell.SetFree();
+            transform.DOScale(Vector3.zero, 0.25f).OnComplete(() => Destroy(gameObject));
+        }
+        
+        #endregion
+
+        public void HighlightValidCells()
         {
             for (int i = 0; i < GetValidMoves().Count; i++)
             {
@@ -64,9 +73,7 @@ namespace Controllers
             }
         }
         
-        
         // Helpers
-        
         public int GetDirectionSign()
         {
             return Team == Team.Black ? -1 : 1;
@@ -76,8 +83,23 @@ namespace Controllers
         {
             return GetValidMoves().Contains(cell);
         }
+
+        public void GetCaptured()
+        {
+            transform.DOScale(Vector3.zero, 0.25f).OnComplete(() => Destroy(gameObject));
+            
+            NetGetCaptured ngc = new NetGetCaptured();
+            ngc.CaptureData = new CaptureData
+            {
+                CapturedCellCoordinates = CurrentCell.GetCoordinates(),
+                TeamEnum =  GridManager.instance.GetCurrentTeam(),
+            };
+            
+            Client.instance.SendToServer(ngc);
+        }
+
         protected abstract List<CellController> GetValidMoves();
         protected abstract bool TryAddMove(List<CellController> moves, Vector2Int targetCoord, bool isCapture);
-        protected abstract void MoveComplete();
+        protected abstract void OnMoveComplete();
     }
 }

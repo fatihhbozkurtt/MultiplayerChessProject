@@ -78,7 +78,7 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 SelectedCell = newCell;
 
                 // highlight the possible valid cells
-                SelectedCell.GetCurrentPiece().HihglightValidCells();
+                SelectedCell.GetCurrentPiece().HighlightValidCells();
             }
         }
 
@@ -88,21 +88,27 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         {
             NetUtility.S_WELCOME += OnWelcomeServer;
             NetUtility.S_MAKE_MOVE += OnMakeMoveServer;
+            NetUtility.S_GET_CAPTURED += OnGetCapturedServer;
 
 
             NetUtility.C_WELCOME += OnWelcomeClient;
             NetUtility.C_START_GAME += OnStartGameClient;
-            NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
+            NetUtility.C_MAKE_MOVE += OnMakeMoveClient; 
+            NetUtility.C_GET_CAPTURED += OnGetCapturedClient;
         }
+
+       
 
         private void UnregisterEvents()
         {
             NetUtility.S_WELCOME -= OnWelcomeServer;
             NetUtility.S_MAKE_MOVE -= OnMakeMoveServer;
+            NetUtility.S_GET_CAPTURED -= OnGetCapturedServer;
 
             NetUtility.C_WELCOME -= OnWelcomeClient;
             NetUtility.C_START_GAME -= OnStartGameClient;
             NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
+            NetUtility.C_GET_CAPTURED -= OnGetCapturedClient;
         }
 
         // Server
@@ -137,6 +143,15 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
             Server.instance.Broadcast(mm);
         }
+        private void OnGetCapturedServer(NetMessage msg, NetworkConnection cnn)
+        {
+            // Receive and just broadcast it back
+            NetGetCaptured mc = msg as NetGetCaptured;
+            
+            Server.instance.Broadcast(mc);
+        }
+
+       
 
         // Client
         int _tempIntTeam;
@@ -184,7 +199,18 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             CellController targetCell = GetGridCellByCoordinates(mm.MoveData.TargetCoord);
 
             PieceController piece = originCell.GetCurrentPiece();
-            piece.MakeMove(targetCell);
+            piece.OrderedMakeMove(targetCell);
+        }
+        
+        private void OnGetCapturedClient(NetMessage msg)
+        {
+            NetGetCaptured ngc = msg as NetGetCaptured;
+            
+            if (ngc.CaptureData.TeamEnum == _currentTeamEnum) return;
+
+            CellController cell = GetGridCellByCoordinates(ngc.CaptureData.CapturedCellCoordinates);
+            PieceController capturedPiece =  cell.GetCurrentPiece();
+            capturedPiece.OrderedGetCaptured();
         }
 
         #endregion

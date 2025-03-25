@@ -5,7 +5,7 @@ namespace Net.NetMessage
 {
     public class NetMessage
     {
-        public OpCode Code {set;get;}
+        public OperationCode Code {set;get;}
 
         public virtual void Serialize(ref DataStreamWriter writer)
         {

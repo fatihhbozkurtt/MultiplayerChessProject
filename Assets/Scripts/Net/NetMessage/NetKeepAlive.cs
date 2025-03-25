@@ -7,12 +7,12 @@ namespace Net.NetMessage
     {
         public NetKeepAlive() // <-- Making the box
         {
-            Code = OpCode.KEEP_ALIVE;
+            Code = OperationCode.KEEP_ALIVE;
         }
 
         public NetKeepAlive(DataStreamReader reader) // <-- Receiving the box
         {
-            Code = OpCode.KEEP_ALIVE;
+            Code = OperationCode.KEEP_ALIVE;
             Deserialize(ref reader);
         }
 

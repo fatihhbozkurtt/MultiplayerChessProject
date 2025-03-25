@@ -9,16 +9,16 @@ namespace Net.NetMessage
     {
         public MoveData MoveData;
         
-        public OpCode Code { get;}
+        public OperationCode Code { get;}
         
         public NetMakeMove()
         {
-            Code = OpCode.MAKE_MOVE;
+            Code = OperationCode.MAKE_MOVE;
         }
         
         public NetMakeMove(DataStreamReader reader) // <-- Receiving the box
         {
-            Code = OpCode.MAKE_MOVE;
+            Code = OperationCode.MAKE_MOVE;
             Deserialize(ref reader);
         }
 

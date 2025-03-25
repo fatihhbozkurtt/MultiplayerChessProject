@@ -18,7 +18,7 @@ namespace Controllers.SpecificPieces
             throw new System.NotImplementedException();
         }
 
-        protected override void MoveComplete()
+        protected override void OnMoveComplete()
         {
             throw new System.NotImplementedException();
         }
