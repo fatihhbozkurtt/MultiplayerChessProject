@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7999447487204980943}
   - component: {fileID: 7558922316631034565}
   - component: {fileID: 3960638977402030728}
-  - component: {fileID: 825099288371255272}
+  - component: {fileID: 787560210732001401}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &825099288371255272
+--- !u!114 &787560210732001401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -83,13 +83,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3615979518748541681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 167a15248ea547858035e56fb2f659ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c62318a146b44649c7ff3e55942610c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentCell: {fileID: 0}
-  team: 0
-  PieceAttributes:
+  Team: 0
+  pieceData:
     PieceType: 0
+    PiecePrefab: {fileID: 0}
     blackMaterial: {fileID: 0}
     whiteMaterial: {fileID: 0}
 --- !u!1001 &4661203870464935941

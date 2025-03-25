@@ -1,27 +1,69 @@
-﻿using Data;
+﻿using System.Collections.Generic;
+using Data;
+using DG.Tweening;
 using EssentialManagers.Packages.GridManager.Scripts;
+using Net.NetMessage;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Client = Net.Client;
 
 namespace Controllers
 {
-    public class PieceController : MonoBehaviour
+    public abstract class PieceController : MonoBehaviour
     {
         [Header("Debug")] public CellController CurrentCell;
-          public Team team;
-        [FormerlySerializedAs("PieceAttributes")] public PieceData pieceData;
+        public Team Team;
+        public PieceData pieceData;
         MeshRenderer _meshRenderer;
-        public void Initialize( CellController cell, PieceData pieceData)
+
+        public void Initialize(CellController cell, PieceData pieceData)
         {
             CurrentCell = cell;
-            team = cell.GetCoordinates().y < 2 ? Team.White : Team.Black;
+            Team = cell.GetCoordinates().y < 2 ? Team.White : Team.Black;
             this.pieceData = pieceData;
-            
+
             // setMaterial by team
             _meshRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-            _meshRenderer.material = team == Team.Black ? 
-                pieceData.blackMaterial : pieceData.whiteMaterial;
+            _meshRenderer.material = Team == Team.Black ? pieceData.blackMaterial : pieceData.whiteMaterial;
+        }
 
+        public void Move(CellController targetCell)
+        {
+            if (!CanMove(targetCell)) return;
+
+            NetMakeMove nm = new NetMakeMove();
+            nm.MoveData = new MoveData
+            {
+                OriginalCoord = CurrentCell.GetCoordinates(),
+                TargetCoord = targetCell.GetCoordinates(),
+                TeamEnum = Team
+            };
+
+            CurrentCell.SetFree();
+            CurrentCell = targetCell;
+            targetCell.SetOccupied(this);
+            transform.DOMove(targetCell.transform.position, 0.5f);
+
+            Client.instance.SendToServer(nm);
+        }
+
+        public void MakeMove(CellController targetCell)
+        {
+            CurrentCell.SetFree();
+            CurrentCell = targetCell;
+            targetCell.SetOccupied(this);
+            transform.DOMove(targetCell.transform.position, 0.5f);
+        }
+
+        public virtual List<CellController> GetValidMoves()
+        {
+            return new List<CellController>(); // Override in subclasses
+        }
+
+        public abstract bool CanMove(CellController cell);
+
+        public int GetDirectionSign()
+        {
+            return Team == Team.Black ? -1 : 1;
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using Net.NetMessage;
 using Unity.Collections;
 using Unity.Networking.Transport;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Net

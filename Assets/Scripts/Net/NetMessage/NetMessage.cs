@@ -1,7 +1,5 @@
-using System.IO;
 using Unity.Collections;
 using Unity.Networking.Transport;
-using UnityEngine;
 
 namespace Net.NetMessage
 {

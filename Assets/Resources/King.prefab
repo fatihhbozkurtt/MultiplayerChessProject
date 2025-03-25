@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2829286256034153259}
   - component: {fileID: 1705279041790202348}
   - component: {fileID: 5912642943528069855}
-  - component: {fileID: 8730486638818039855}
   m_Layer: 0
   m_Name: King
   m_TagString: Untagged
@@ -74,24 +73,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &8730486638818039855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5140954692067623619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 167a15248ea547858035e56fb2f659ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentCell: {fileID: 0}
-  team: 0
-  PieceAttributes:
-    PieceType: 0
-    blackMaterial: {fileID: 0}
-    whiteMaterial: {fileID: 0}
 --- !u!1001 &3569578299935085855
 PrefabInstance:
   m_ObjectHideFlags: 0

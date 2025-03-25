@@ -2,7 +2,6 @@ using System;
 using Net.NetMessage;
 using Unity.Collections;
 using Unity.Networking.Transport;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Net
@@ -71,7 +70,7 @@ namespace Net
             UpdateMessagePump();
         }
 
-        void CheckAlive()
+        private void CheckAlive()
         {
             if (!connection.IsCreated && _isActive)
             {
@@ -81,7 +80,7 @@ namespace Net
             }
         }
 
-        void UpdateMessagePump()
+        private void UpdateMessagePump()
         {
             DataStreamReader stream;
             NetworkEvent.Type cmd;

@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Data;
 using Controllers;
 using Data;
-using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace EssentialManagers.Packages.GridManager.Scripts
 {
@@ -12,9 +9,8 @@ namespace EssentialManagers.Packages.GridManager.Scripts
     {
         [Header("Debug")] public bool isPickable;
         public bool isOccupied;
-
-        [FormerlySerializedAs("spawnedOccupierObj")] [SerializeField]
-        private PieceController currentPiece;
+        [SerializeField] private PieceController currentPiece;
+        public PieceController PreviousPiece; 
 
         [SerializeField] Vector2Int coordinates;
         [SerializeField] MeshRenderer meshRenderer;
@@ -22,6 +18,8 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         public List<CellController> neighbours;
 
         [SerializeField] private PieceData pieceData;
+
+     
 
         private void Start()
         {
@@ -111,8 +109,12 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             if (!isOccupied) return;
             if (currentPiece == null) return;
 
-            if (GridManager.instance.GetCurrentTeam() != currentPiece.team) return;
-            currentPiece.gameObject.SetActive(false);
+            if (GridManager.instance.GetCurrentTeam() != currentPiece.Team) return;
+
+            int sign = currentPiece.Team == Team.Black ? -1 : 1;
+            currentPiece.Move(
+                GridManager.instance.GetGridCellByCoordinates(new Vector2Int(coordinates.x,
+                    coordinates.y + (2 * sign))));
         }
 
         #region GETTERS & SETTERS
@@ -130,11 +132,12 @@ namespace EssentialManagers.Packages.GridManager.Scripts
 
         public void SetFree()
         {
+            PreviousPiece = currentPiece;
             currentPiece = null;
             isOccupied = false;
         }
 
-        public PieceController GetOccupierObject()
+        public PieceController GetCurrentPiece()
         {
             return currentPiece;
         }

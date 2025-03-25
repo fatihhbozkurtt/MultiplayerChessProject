@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using Controllers;
 using Data;
 using Net;
 using Net.NetMessage;
-using Photon.Pun;
 using Unity.Networking.Transport;
 using UnityEngine;
 
@@ -18,10 +17,10 @@ namespace EssentialManagers.Packages.GridManager.Scripts
         [Header("References")] public GameObject cellPrefab; // Prefab for the cell
 
         [Header("Debug")] public List<CellController> gridPlan;
-
+        public CellController SelectedCell;
+        
         [Header("Multiplayer Logic")] private int _playerCount;
         private Team _currentTeamEnum;
-
 
         protected void Start()
         {
@@ -59,19 +58,36 @@ namespace EssentialManagers.Packages.GridManager.Scripts
             }
         }
 
+        public void AssignNewSelectedCell(CellController newCell)
+        {
+            if (SelectedCell != null)
+            {
+                // already a cell selected before
+                SelectedCell.GetCurrentPiece().Move(newCell);
+            }
+        }
+
         #region Events Region
 
         private void RegisterEvents()
         {
             NetUtility.S_WELCOME += OnWelcomeServer;
-
+            NetUtility.S_MAKE_MOVE += OnMakeMoveServer;
+            
+            
             NetUtility.C_WELCOME += OnWelcomeClient;
             NetUtility.C_START_GAME += OnStartGameClient;
+            NetUtility.C_MAKE_MOVE += OnMakeMoveClient;
         }
-
 
         private void UnregisterEvents()
         {
+            NetUtility.S_WELCOME -= OnWelcomeServer;
+            NetUtility.S_MAKE_MOVE -= OnMakeMoveServer;
+            
+            NetUtility.C_WELCOME -= OnWelcomeClient;
+            NetUtility.C_START_GAME -= OnStartGameClient;
+            NetUtility.C_MAKE_MOVE -= OnMakeMoveClient;
         }
 
         // Server
@@ -98,10 +114,17 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 Server.instance.Broadcast(new NetStartGame());
             }
         }
+        
+        private void OnMakeMoveServer(NetMessage msg, NetworkConnection conn)
+        {
+            // Receive and just broadcast it back
+            NetMakeMove mm = msg as NetMakeMove;
+            
+            Server.instance.Broadcast(mm);
+        }
 
         // Client
         int _tempIntTeam;
-
         private void OnWelcomeClient(NetMessage msg)
         {
             // Receive the connection message
@@ -120,7 +143,6 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 Debug.Log(" 3) My assigned team null");
             }
         }
-
         private void OnStartGameClient(NetMessage msg)
         {
             GameManager.instance.StartGame();
@@ -130,7 +152,24 @@ namespace EssentialManagers.Packages.GridManager.Scripts
                 : CameraManager.CamType.BlackPlayer);
  
         }
+        private void OnMakeMoveClient(NetMessage msg)
+        {
+            NetMakeMove mm = msg as NetMakeMove;
+            
+            if(mm.MoveData.TeamEnum == _currentTeamEnum) return;
+            
+            Debug.LogWarning($"MM : {mm.MoveData.TeamEnum} : " +
+                             $"{mm.MoveData.OriginalCoord.x}, {mm.MoveData.OriginalCoord.y} -> " +
+                             $"{mm.MoveData.TargetCoord.x}, {mm.MoveData.TargetCoord.y} ");
+            
+            
+            CellController originCell = GetGridCellByCoordinates(mm.MoveData.OriginalCoord);
+            CellController targetCell = GetGridCellByCoordinates(mm.MoveData.TargetCoord);
 
+            PieceController piece = originCell.GetCurrentPiece();
+            piece.MakeMove(targetCell);
+        }
+        
         #endregion
 
         #region Helper Methods
